@@ -19,6 +19,8 @@ def main():
 
         if scelta == "1":
             nuovo_nome = input("Inserisci il nuovo nome della crociera: ")
+            crociera.nome = nuovo_nome
+            print(f"Il nuovo nome è: {crociera.nome}")
             # TODO: Aggiorna il nome della crociera
 
         elif scelta == "2":
@@ -42,7 +44,11 @@ def main():
             cabine_ordinate = crociera.cabine_ordinate_per_prezzo()
             print("\n--- Cabine ordinate per prezzo ---")
             for c in cabine_ordinate:
-                print(c)
+                if c[1] == True:
+                    print(f"{c[0]} | DISPONIBILE")
+                else:
+                    print(f"{c[0]} | NON DISPONIBILE")
+
 
         elif scelta == "5":
             print("\n--- Elenco passeggeri ---")
