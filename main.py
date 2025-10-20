@@ -44,7 +44,7 @@ def main():
             cabine_ordinate = crociera.cabine_ordinate_per_prezzo()
             print("\n--- Cabine ordinate per prezzo ---")
             for c in cabine_ordinate:
-                print(c[1])
+                print(c)
 
 
         elif scelta == "5":

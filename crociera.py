@@ -3,7 +3,7 @@ from cabina import Cabina
 from cabinaDeluxe import CabinaDeluxe
 from cabinaAnimali import CabinaAnimali
 from passeggero import Passeggero
-from operator import itemgetter
+from operator import itemgetter, attrgetter
 
 class Crociera:
     def __init__(self, nome):
@@ -74,7 +74,7 @@ class Crociera:
 
     def cabine_ordinate_per_prezzo(self):
         """Restituisce la lista ordinata delle cabine in base al prezzo"""
-        listaCabineOrdinate = sorted(self.cabineTotali.items(), key=itemgetter(1), reverse=False)
+        listaCabineOrdinate = sorted(self.cabineTotali.values())
         return listaCabineOrdinate
 
         # TODO
