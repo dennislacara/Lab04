@@ -3,13 +3,13 @@ from cabina import Cabina
 from cabinaDeluxe import CabinaDeluxe
 from cabinaAnimali import CabinaAnimali
 from passeggero import Passeggero
-from operator import attrgetter
+from operator import itemgetter
 
 class Crociera:
     def __init__(self, nome):
         """Inizializza gli attributi e le strutture dati"""
         self._nome = nome
-        self.cabineTotali = {} #cabineTotali = { idCabina: [oggettoCabina, disponibilita], ...}
+        self.cabineTotali = {} #cabineTotali = { idCabina: oggettoCabina, ...}
         self.passeggeriTotali = {} #passeggeriTotali = { idPasseggero: oggettoPasseggero, ...}
         self.cabineAssegnatePasseggeri = {} # { idPasseggero : oggettoCabina, ...}
         # TODO
@@ -31,22 +31,20 @@ class Crociera:
             raise FileNotFoundError
 
         #smistamento degli elementi presenti nel file
-        # ogni cabina è aggiunta al dizionario cabineTotali specificando la disponibilita
-        # nella forma: cabineTotali = { idCabina: [oggettoCabina, disponibilita], ...}
-        disponibilita = True
+        # ogni cabina è aggiunta al dizionario cabineTotali
         for riga in reader(f):
             #print(riga)
             if len(riga) == 3: #passeggero
                 self.passeggeriTotali[riga[0]]=Passeggero(riga[0], riga[1], riga[2])
 
             elif len(riga) == 4: #cabina Standard
-                self.cabineTotali[riga[0]] =[Cabina(riga[0], riga[1], riga[2], riga[3]), disponibilita]
+                self.cabineTotali[riga[0]] = Cabina(riga[0], riga[1], riga[2], riga[3])
 
             elif len(riga) == 5 and riga[4].isalpha(): #cabina deluxe
-                self.cabineTotali[riga[0]] = [CabinaDeluxe(riga[0], riga[1], riga[2], riga[3], riga[4]), disponibilita]
+                self.cabineTotali[riga[0]] = CabinaDeluxe(riga[0], riga[1], riga[2], riga[3], riga[4])
 
             elif len(riga) == 5 and riga[4].isdigit(): #cabina animali
-                self.cabineTotali[riga[0]] = [CabinaAnimali(riga[0], riga[1], riga[2], riga[3], riga[4]), disponibilita]
+                self.cabineTotali[riga[0]] = CabinaAnimali(riga[0], riga[1], riga[2], riga[3], riga[4])
             else:
                 raise Exception('file mal formattato')
 
@@ -59,13 +57,12 @@ class Crociera:
             #controllo che il passeggero non sia assegnato ad altra stanza
             if codice_passeggero not in self.cabineAssegnatePasseggeri:
                 #controllo che la cabina sia libera
-                if self.cabineTotali[codice_cabina][1] == True:
+                if self.cabineTotali[codice_cabina]._disponibilita == True:
                     #assegno la cabina al passeggero
                     self.cabineAssegnatePasseggeri[codice_passeggero] = self.cabineTotali[codice_cabina]
                     #cambio la disponibilità della cabina
-                    self.cabineTotali[codice_cabina][1] = False
-                    #print(self.cabineAssegnatePasseggeri[codice_passeggero][0])
-
+                    self.cabineTotali[codice_cabina]._disponibilita = False
+                    #print(self.cabineTotali[codice_cabina])
                 else:
                     raise Exception('Cabina non disponibile')
             else:
@@ -77,19 +74,8 @@ class Crociera:
 
     def cabine_ordinate_per_prezzo(self):
         """Restituisce la lista ordinata delle cabine in base al prezzo"""
-        listaCabine = []
-        for cab in self.cabineTotali:
-            oggettoCabina = self.cabineTotali[cab][0]
-            listaCabine.append(oggettoCabina)
-        listaCabineOrdinate = sorted(listaCabine, key= attrgetter('prezzo'), reverse=False)
-
-        listaCabineOrdinateDisponibilita = []
-        for cab2 in listaCabineOrdinate:
-            idCabina = cab2.idCabina
-            disponibilitaCabina = self.cabineTotali[idCabina][1]
-            listaCabineOrdinateDisponibilita.append([cab2, disponibilitaCabina])
-            #print((cab2, disponibilitaCabina))
-        return listaCabineOrdinateDisponibilita
+        listaCabineOrdinate = sorted(self.cabineTotali.items(), key=itemgetter(1), reverse=False)
+        return listaCabineOrdinate
 
         # TODO
 
@@ -100,7 +86,7 @@ class Crociera:
 
             if id_passeggero in self.cabineAssegnatePasseggeri:
                 print(f'{self.passeggeriTotali[id_passeggero]};'
-                      f' Assegnato alla cabina:\n{self.cabineAssegnatePasseggeri[id_passeggero][0]}')
+                      f' Assegnato alla cabina: {self.cabineAssegnatePasseggeri[id_passeggero]._idCabina}')
                 print()
             else:
                 print(f'{self.passeggeriTotali[id_passeggero]}')

@@ -32,8 +32,8 @@ def main():
                 print("File non trovato.")
 
         elif scelta == "3":
-            codice_cabina = input("Codice cabina: ")
-            codice_passeggero = input("Codice passeggero: ")
+            codice_cabina = input("Codice cabina: ").upper()
+            codice_passeggero = input("Codice passeggero: ").upper()
             try:
                 crociera.assegna_passeggero_a_cabina(codice_cabina, codice_passeggero)
                 print("Cabina assegnata con successo.")
@@ -44,10 +44,7 @@ def main():
             cabine_ordinate = crociera.cabine_ordinate_per_prezzo()
             print("\n--- Cabine ordinate per prezzo ---")
             for c in cabine_ordinate:
-                if c[1] == True:
-                    print(f"{c[0]} | DISPONIBILE")
-                else:
-                    print(f"{c[0]} | NON DISPONIBILE")
+                print(c[1])
 
 
         elif scelta == "5":

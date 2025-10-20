@@ -12,4 +12,3 @@ class CabinaAnimali(Cabina):
         self._prezzo = int(prezzo) * (1 + 0.10 * self._nAnimali)
 
         self._tipologia = 'Animali'
-
